@@ -1,3 +1,5 @@
+require('console-stamp')(console, { pattern: 'dd/mm/yyyy HH:MM:ss.l' });
+
 const gamedig = require('gamedig');
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -15,23 +17,28 @@ client.on('message', message => {
               // console.log(embed);
               helpembed = new Discord.RichEmbed()
                 .setColor(5151967)
-                .addField("Server Status Checker for Battalion1944", "Usage: `" + command + " <IP>[:port]`" +
-                    "\n*Port is optional and defaults to 7777+3*")
+                .addField("Server Status Checker for Battalion1944", "Usage: `" + command + " <IP>[:port] [password]`" +
+                    "\n*Port is optional and defaults to 7777+3, password is optional and purely cosmetic only works on passworded servers*")
                 .addField("Author", "phit#4970")
                 .setTimestamp();
               message.reply("", {embed: helpembed});
         } else {
-            address = message.content.substr(command.length);
-            address = address.trim();
-            split = address.split(":")
-            ip = split[0]
-            port = split[1] || 7780;
+            arguments = message.content.substr(command.length).trim();
+            aarguments = arguments.split(" ");
+            if (aarguments.length == 0) {
+                aarguments.push(arguments);
+            }
+            
+            aaddresss = aarguments[0].split(":");
+            ip = aaddresss[0];
+            port = aaddresss[1] || 7780;
+            password = aarguments[1] || "";
             getStatus(ip, port)
                 .then((response) => {
                     // Playerlist doesn't seem to work currently..
                     
                     //var playerList = "";
-                    console.log(response);
+                    //console.log(response);
                     // if (response.players.length > 0){
                         // for (i in response.players){
                             // if (i < response.players.length - 1){
@@ -42,9 +49,12 @@ client.on('message', message => {
                         // }
                     // }
                     
-                    password = "";
                     if (response.raw.rules.bat_has_password_s == "Y") {
-                        password = " password INSERTHERE"
+                        if (password != "") {
+                            password = " password " + password;
+                        } else {
+                            password = " password INSERTHERE";
+                        }
                     }
 
                     richembed = new Discord.RichEmbed()
@@ -58,8 +68,9 @@ client.on('message', message => {
                             "\nMode: " + response.raw.rules.bat_gamemode_s +
                             "\n\n`connect " + response.query.host + ":" + response.raw.port + password + "`");
                     message.reply("", {embed: richembed});
+                    console.log("[" + ip + "] replied online!");
                 }).catch((error) => {
-                    console.log(error);
+                    console.error(error);
                     richembed = new Discord.RichEmbed()
                         .setColor(16711680)
                         .setTimestamp()
@@ -67,6 +78,7 @@ client.on('message', message => {
                             "Server is offline or address is invalid..");
 
                     message.reply("", {embed: richembed});
+                    console.log("[" + ip + "] replied offline!");
                 });
         }
     }
@@ -74,7 +86,7 @@ client.on('message', message => {
 
 function getStatus(ip, port) {
     port = port || 7780;   
-    console.log("getting status " + ip + " " + port)
+    console.log("[" + ip + "] getting status for " + ip + ":" + port)
     return gamedig.query({
         type: 'protocol-valve',
         socketTimeout: 2000,
