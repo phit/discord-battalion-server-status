@@ -1,0 +1,22 @@
+{
+  "name": "btt44-discord-status",
+  "version": "0.1.0",
+  "description": "gets a Battalion 1944 server status and returns it to a discord channel",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "battalion",
+    "bot",
+    "server",
+    "status"
+  ],
+  "author": "phit",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.3.0",
+    "gamedig": "^1.0.40"
+  }
+}
