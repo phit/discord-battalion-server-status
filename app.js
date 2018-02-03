@@ -4,7 +4,7 @@ const client = new Discord.Client();
 
 client.login('TOKEN');
 
-var command = '!bss';
+command = '!bss';
 
 client.on('message', message => {
     if (message.content.startsWith(command)) {
@@ -13,7 +13,7 @@ client.on('message', message => {
         
         if (message.content == command || message.content == command + " " || message.content == command + " help") {
               // console.log(embed);
-              var helpembed = new Discord.RichEmbed()
+              helpembed = new Discord.RichEmbed()
                 .setColor(5151967)
                 .addField("Server Status Checker for Battalion1944", "Usage: `" + command + " <IP>[:port]`" +
                     "\n*Port is optional and defaults to 7777+3*")
@@ -21,17 +21,17 @@ client.on('message', message => {
                 .setTimestamp();
               message.reply("", {embed: helpembed});
         } else {
-            var address = message.content.substr(command.length);
+            address = message.content.substr(command.length);
             address = address.trim();
-            var split = address.split(":")
-            var ip = split[0]
-            var port = split[1] || 7780;
+            split = address.split(":")
+            ip = split[0]
+            port = split[1] || 7780;
             getStatus(ip, port)
                 .then((response) => {
                     // Playerlist doesn't seem to work currently..
                     
                     //var playerList = "";
-                    //console.log(response);
+                    console.log(response);
                     // if (response.players.length > 0){
                         // for (i in response.players){
                             // if (i < response.players.length - 1){
@@ -42,25 +42,25 @@ client.on('message', message => {
                         // }
                     // }
                     
-                    var password = "";
+                    password = "";
                     if (response.raw.rules.bat_has_password_s == "Y") {
                         password = " password INSERTHERE"
                     }
 
-                    var richembed = new Discord.RichEmbed()
+                    richembed = new Discord.RichEmbed()
                         .setColor(7844437)
                         .setThumbnail("https://phit.link/battalion/" + response.raw.rules.bat_map_s.replace(/ /g,"_").toLowerCase() + ".png")
                         .setTimestamp()
                         .addField(response.raw.rules.bat_name_s,
                             //"\nPlayers: (" + response.raw.numplayers + "/" + response.maxplayers + ") " + playerList +
-                            "\nPlayers: " + response.raw.rules.bat_player_count_s + "/" + response.maxplayers +
+                            "\nPlayers: " + response.raw.rules.bat_player_count_s + "/" + response.raw.rules.bat_max_players_i +
                             "\nMap: " + response.raw.rules.bat_map_s +
                             "\nMode: " + response.raw.rules.bat_gamemode_s +
                             "\n\n`connect " + response.query.host + ":" + response.raw.port + password + "`");
                     message.reply("", {embed: richembed});
                 }).catch((error) => {
                     console.log(error);
-                    var richembed = new Discord.RichEmbed()
+                    richembed = new Discord.RichEmbed()
                         .setColor(16711680)
                         .setTimestamp()
                         .addField(ip + " :x:",
