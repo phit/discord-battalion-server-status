@@ -16,6 +16,7 @@
   "author": "phit",
   "license": "MIT",
   "dependencies": {
+    "console-stamp": "^0.2.6",
     "discord.js": "^11.3.0",
     "gamedig": "^1.0.40"
   }

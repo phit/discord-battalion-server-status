@@ -8,6 +8,13 @@ client.login('TOKEN');
 
 command = '!bss';
 
+client.on("ready", () => {
+    console.log("ready!")
+    client.user.setActivity("!bss help", {
+        type: "PLAYING"
+    });
+});
+
 client.on('message', message => {
     if (message.content.startsWith(command)) {
         //remove author command invoke message (requires channel permission "MANAGE_MESSAGES")
